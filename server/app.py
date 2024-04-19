@@ -3,8 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from models import db, HistoricalPrice
 from datetime import datetime
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///PortfolioPro.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
