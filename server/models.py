@@ -8,7 +8,10 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
+    user_type = db.Column(db.String(50), nullable=False, default='individual')
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    user_name = db.Column(db.String(120), nullable=False)
+    broker = db.Column(db.String(120), nullable=False, default='Zerodha')
     password_hash = db.Column(db.String(128), nullable=False)
 
     @property
@@ -23,7 +26,9 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f"<User(username={self.username})>"
+        return f"<User(id={self.id}, user_type={self.user_type}, email={self.email}, user_name={self.user_name}, broker={self.broker})>"
+
+
 
 class HistoricalPrice(db.Model):
     __tablename__ = 'historical_prices'
