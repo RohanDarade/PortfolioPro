@@ -3,10 +3,12 @@ import HoldingTable from "./HoldingTable";
 import Card from "./Card";
 import axios from "axios";
 import AllocationChart from "./AllocationChart";
+import HistoricalDataChart from "./IndexChart";
 
 function Portfolio() {
   const [holdings, setHoldings] = useState([]);
   const [stocks, setStocks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchHoldings = async () => {
     const user_id = localStorage.getItem("user_id");
@@ -14,6 +16,7 @@ function Portfolio() {
       const response = await axios.get(`http://127.0.0.1:5000/holdings/${user_id}`);
       setHoldings(response.data.holdings);
       console.log(response.data.holdings);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -53,13 +56,19 @@ function Portfolio() {
 
   return (
     <div>
-      <div>
-        <div className="flex justify-center flex-row">
-        <Card holdings={updatedHoldings} />
-        <AllocationChart holdings={updatedHoldings} />
+      {loading ? (
+        <p className="text-center mt-4">Loading...</p>
+      ) : holdings.length === 0 ? (
+        <p className="flex justify-center items-center mt-24 text-3xl text-gray-400 font-extralight">No holdings...</p>
+      ) : (
+        <div>
+          <div className="flex justify-center flex-row">
+            <Card holdings={updatedHoldings} />
+            <AllocationChart holdings={updatedHoldings} />
+          </div>
+          <HoldingTable holdings={updatedHoldings} />
         </div>
-        <HoldingTable holdings={updatedHoldings} />
-      </div>
+      )}
     </div>
   );
 }

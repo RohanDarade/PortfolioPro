@@ -2,18 +2,21 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
-const HistoricalDataChart = ({ symbol }) => {
+const IndexChart = () => {
   const [data, setData] = useState([]);
   const [fromDate, setFromDate] = useState('2017-01-01');
   const [toDate, setToDate] = useState('2017-01-31');
+  const [index, setIndex] = useState('NIFTY 50');
 
   useEffect(() => {
     fetchData();
-  }, [fromDate, toDate, symbol]);
+  }, [fromDate, toDate, index]);
 
   const fetchData = () => {
+    let url = `http://127.0.0.1:5000/historical-data?symbol=${index}&from_date=${fromDate}&to_date=${toDate}`;
+
     axios
-      .get(`http://127.0.0.1:5000/historical-data?symbol=${symbol}&from_date=${fromDate}&to_date=${toDate}`)
+      .get(url)
       .then((response) => {
         setData(response.data);
       })
@@ -28,6 +31,10 @@ const HistoricalDataChart = ({ symbol }) => {
 
   const handleToDateChange = (e) => {
     setToDate(e.target.value);
+  };
+
+  const handleIndexChange = (e) => {
+    setIndex(e.target.value);
   };
 
   // Generate Y-axis ticks based on the data
@@ -48,15 +55,25 @@ const HistoricalDataChart = ({ symbol }) => {
 
   return (
     <div>
+      <div className='flex flex-row mb-4'>
       <div>
-        <label htmlFor="fromDate">From:</label>
-        <input type="date" id="fromDate" value={fromDate} onChange={handleFromDateChange} />
+        <label htmlFor="index" className='font-extralight'>Index:</label>
+        <select id="index" className="bg-gradient-to-l from-sky-100 to-indigo-100 border py-2 px-2 rounded-md mx-2 drop-shadow-md" value={index} onChange={handleIndexChange}>
+          <option value="NIFTY 50">Nifty 50</option>
+          <option value="NIFTY BANK">Nifty Bank</option>
+          {/* Add other options as needed */}
+        </select>
       </div>
       <div>
-        <label htmlFor="toDate">To:</label>
-        <input type="date" id="toDate" value={toDate} onChange={handleToDateChange} />
+        <label htmlFor="fromDate" className='font-extralight'>Start Date : </label>
+        <input type="date" className='bg-gradient-to-l from-sky-100 to-indigo-100 border py-2 px-2 rounded-md mx-2 drop-shadow-md' id="fromDate" value={fromDate} onChange={handleFromDateChange} />
       </div>
-      <LineChart width={900} height={500} data={data}>
+      <div>
+        <label htmlFor="toDate" className="font-extralight">End Date:</label>
+        <input type="date" className="bg-gradient-to-l from-sky-100 to-indigo-100 border py-2 px-2 rounded-md mx-2 drop-shadow-md" id="toDate" value={toDate} onChange={handleToDateChange} />
+      </div>
+      </div>
+      <LineChart width={1000} height={500} data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
         <YAxis domain={['dataMin', 'dataMax']} ticks={generateYAxisTicks()} />
@@ -68,4 +85,4 @@ const HistoricalDataChart = ({ symbol }) => {
   );
 };
 
-export default HistoricalDataChart;
+export default IndexChart;
