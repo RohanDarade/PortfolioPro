@@ -55,7 +55,7 @@ function TradeModal({ symbol, price, action, onClose }) {
           />
         </div>
         <div className="flex justify-between mt-4">
-          <button onClick={handleTrade} className={`bg-${action === "Sell" ? "FBE0DF" : "DAE9FF"} hover:bg-${action === "Sell" ? "EB2821" : "0160FF"} border border-${action === "Sell" ? "EB2821" : "0160FF"} text-${action === "Sell" ? "EB2821" : "0160FF"} hover:text-white font-bold py-2 px-10 rounded`}>
+          <button onClick={handleTrade} className={`bg-${action === "Sell" ? "[#FBE0DF]" : "[#DAE9FF]"} hover:bg-${action === "Sell" ? "[#EB2821]" : "[#0160FF]"} border border-${action === "Sell" ? "[#EB2821]" : "[#0160FF]"} text-${action === "Sell" ? "[#EB2821]" : "[#0160FF]"} hover:text-white font-bold py-2 px-10 rounded`}>
             {action}
           </button>
           <button onClick={onClose} className="border border-gray-600 text-gray-600 py-2 px-8 rounded">
