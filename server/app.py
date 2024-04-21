@@ -1,3 +1,4 @@
+import random
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
@@ -5,8 +6,11 @@ from datetime import datetime
 from flask_cors import CORS
 from models import db, HistoricalPrice, User, StockPrice, Holdings
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_socketio import SocketIO, emit
 import os
 import json
+import time
+from threading import Thread
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000"])
@@ -17,10 +21,12 @@ CORS(app, origins=["http://localhost:3000"])
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///PortfolioPro.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
+app.config['SECRET_KEY'] = 'SOCKET_IO_SECRET_KEY'  # Secret key for SocketIO
 
 db.init_app(app)
 
 jwt = JWTManager(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def index():
@@ -196,9 +202,35 @@ def sell_stock(user_id):
     return jsonify({'message': 'Stock sold successfully'}), 200
 
 
+@socketio.on('connect')
+def handle_ticker_connection():
+    print('Client connected')
+    emit('message', {'message': 'Connection established'})
+    ticker_thread = Thread(target=emit_ticker_data)
+    ticker_thread.start()
+
+def emit_ticker_data():
+    start_time = time.time()
+    while time.time() - start_time < 600:  # At max 10 minutes
+        # print("Emit watchlist")
+        with app.app_context():
+            symbols = StockPrice.query.all()
+            symbol_data = [{
+                'id': symbol.id,
+                'symbol': symbol.symbol,
+                'datetime': symbol.datetime.strftime('%Y-%m-%d %H:%M:%S'),
+                'price': symbol.price + random.randint(-10, 10)
+            } for symbol in symbols]
+            socketio.emit('stocks', {'symbols': symbol_data})
+            time.sleep(10)
+
+    # close connection
+    socketio.emit('message', {'message': 'Connection closed'})
+    print('Client disconnected')
+
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
-
+    # app.run(debug=True)
+    socketio.run(app, debug=True)

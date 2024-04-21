@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar'; 
-import StockPriceUpdater from './components/StockPriceGenerator';
+// import StockPriceUpdater from './components/StockPriceGenerator';
 
 function App() {
   

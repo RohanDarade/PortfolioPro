@@ -1,24 +1,53 @@
+
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { io } from "socket.io-client";
 import TradeModal from "./TradeModal";
 
 function Watchlist() {
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [previousPrice, setPreviousPrice] = useState({ symbol: "", price: 0 });
+  const [change, setChange] = useState(0);
   const [selectedSymbol, setSelectedSymbol] = useState(null);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetch("http://127.0.0.1:5000/stocks")
-        .then((response) => response.json())
-        .then((data) => {
-          setStocks(data.symbols);
-          setLoading(false); // Data received, set loading to false
-        });
-    }, 2000);
 
-    return () => clearInterval(interval);
+  useEffect(() => {
+    const socket = io("http://127.0.0.1:5000")
+
+    console.log("socket", socket);
+
+    socket.on("connect", (data) => {
+      console.log("connected", data);
+    });
+    socket.on("message", (data) => {
+      console.log("socket log", data);
+    });
+    socket.on("stocks", (data) => {
+      console.log("Watchlist socket data", data);
+      setStocks(data.symbols);
+      setLoading(false)
+    });
+    socket.on("disconnect", (data) => {
+      console.log("Disconnected", data);
+    });
+
+    // Clean up function to close the socket connection when component unmounts
+    return () => {
+      console.log("socket clenaup listener");
+      socket.removeAllListeners();
+      console.log("socket disconnecte");
+      socket.disconnect();
+    };
   }, []);
+
+  useEffect(() => {
+    if (stocks.length > 0 && previousPrice === 0) {
+      if (stocks[0].price != previousPrice[0].price) {
+        setChange(stocks[0].price - previousPrice[0].price);
+        setPreviousPrice(stocks[0].price);
+      }
+    }
+  }, [stocks]);
 
   useEffect(() => {
     console.log(stocks);
@@ -33,7 +62,8 @@ function Watchlist() {
   };
 
   return (
-    <div>
+
+<div>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -53,10 +83,10 @@ function Watchlist() {
                   <td className="px-4 py-2 text-sm">{stock.symbol}</td>
                   <td className="px-4 py-2 text-sm">{stock.price}</td>
                   <td className="px-4 py-2 text-sm">
-                    <button onClick={() => handleBuySell(stock.symbol)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Buy</button>
+                    <button onClick={() => handleBuySell(stock.symbol)} className="bg-[#DAE9FF] hover:bg-[#0160FF] border border-[#0160FF] text-[#0160FF] hover:text-white font-bold py-2 px-10 rounded">Buy</button>
                   </td>
                   <td className="px-4 py-2 text-sm">
-                    <button onClick={() => handleBuySell(stock.symbol)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Sell</button>
+                    <button onClick={() => handleBuySell(stock.symbol)} className="bg-[#FBE0DF] hover:bg-[#EB2821] border border-[#EB2821] text-[#EB2821] hover:text-white font-bold py-2 px-10 rounded">Sell</button>
                   </td>
                 </tr>
               ))}
@@ -70,3 +100,35 @@ function Watchlist() {
 }
 
 export default Watchlist;
+
+
+//   return (
+//     <div>
+//       <h2>Watchlist</h2>
+//       {loading ? (
+//         <p>Loading...</p>
+//       ) : (
+//         <table>
+//           <thead>
+//             <tr>
+//               <th>Symbol</th>
+//               <th>Price</th>
+//               <th>Change</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {stocks.map((stock) => (
+//               <tr key={stock.id}>
+//                 <td>{stock.symbol}</td>
+//                 <td>{stock.price}</td>
+//                 <td>{change}</td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </table>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default Watchlist;

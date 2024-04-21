@@ -48,7 +48,7 @@ function Dashboard() {
           <li
             onClick={() => handleNavigation('portfolio')}
             className={`cursor-pointer mx-4 my-2 rounded-md flex flex-row items-center px-4 py-3 ${
-              selectedComponent === 'portfolio' ? 'bg-[#5ACEFF] text-black' : 'hover:bg-gray-300'
+              selectedComponent === 'portfolio' ? 'bg-[#DAE9FF] text-black' : 'hover:bg-gray-300'
             }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="mr-2 w-6 h-6">
@@ -60,7 +60,7 @@ function Dashboard() {
           <li
             onClick={() => handleNavigation('watchlist')}
             className={`cursor-pointer mx-4 my-2 rounded-md flex flex-row items-center px-4 py-3 ${
-              selectedComponent === 'watchlist' ? 'bg-[#5ACEFF] text-black' : 'hover:bg-gray-300'
+              selectedComponent === 'watchlist' ? 'bg-[#DAE9FF] text-black' : 'hover:bg-gray-300'
             }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="mr-2 w-6 h-6">
@@ -71,7 +71,7 @@ function Dashboard() {
           <li
             onClick={() => handleNavigation('orders')}
             className={`cursor-pointer mx-4 my-2 rounded-md flex flex-row items-center px-4 py-3 ${
-              selectedComponent === 'orders' ? 'bg-[#5ACEFF] text-black' : 'hover:bg-gray-300'
+              selectedComponent === 'orders' ? 'bg-[#DAE9FF] text-black' : 'hover:bg-gray-300'
             }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="mr-2 w-6 h-6">
@@ -82,7 +82,7 @@ function Dashboard() {
           <li
             onClick={() => handleNavigation('account')}
             className={`cursor-pointer mx-4 my-2 rounded-md flex flex-row items-center px-4 py-3 ${
-              selectedComponent === 'account' ? 'bg-[#5ACEFF] text-black' : 'hover:bg-gray-300'
+              selectedComponent === 'account' ? 'bg-[#DAE9FF] text-black' : 'hover:bg-gray-300'
             }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="mr-2 w-6 h-6">
@@ -93,7 +93,7 @@ function Dashboard() {
           <li
             onClick={handleLogout}
             className={`cursor-pointer mx-4 my-2 rounded-md flex flex-row items-center px-4 py-3 ${
-              selectedComponent === 'logout' ? 'bg-[#5ACEFF] text-black' : 'hover:bg-gray-300'
+              selectedComponent === 'logout' ? 'bg-[#DAE9FF] text-black' : 'hover:bg-gray-300'
             }`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="mr-2 w-6 h-6">

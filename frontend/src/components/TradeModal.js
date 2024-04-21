@@ -1,15 +1,29 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function TradeModal({ symbol, price, action, onClose }) {
   const [quantity, setQuantity] = useState(0);
 
   const handleTrade = () => {
     // Perform buy/sell action
-    console.log(`Performing ${action} for ${quantity} ${symbol} stocks at ${price}`);
-    // Reset quantity
-    setQuantity(0);
-    // Close the modal
-    onClose();
+    const data = {
+      symbol: symbol,
+      quantity: quantity,
+      avg_buy_price: price // Assuming price is the average buy price
+    };
+
+    axios.post(`http://127.0.0.1:5000/${action}/${localStorage.getItem('user_id')}`, data)
+      .then(response => {
+        console.log(response.data);
+        // Reset quantity
+        setQuantity(0);
+        // Close the modal
+        onClose();
+      })
+      .catch(error => {
+        console.error(error);
+        // Handle error
+      });
   };
 
   return (
