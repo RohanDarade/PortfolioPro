@@ -97,6 +97,75 @@ def update_price():
     return jsonify({'message': 'Prices updated successfully'}), 201
 
 
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    user_data = {
+        'id': user.id,
+        'user_type': user.user_type,
+        'email': user.email,
+        'user_name': user.user_name,
+        'broker': user.broker,
+        'funds': user.funds
+    }
+
+    return jsonify({'user': user_data}), 200
+
+
+
+@app.route('/add-funds/<int:user_id>', methods=['POST'])
+def add_funds(user_id):
+    data = request.get_json()
+    funds_str = data.get('funds')
+
+    if not funds_str:
+        return jsonify({'error': 'Funds amount is required'}), 400
+
+    try:
+        funds = float(funds_str)
+    except ValueError:
+        return jsonify({'error': 'Invalid funds amount'}), 400
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    user.funds += funds
+    db.session.commit()
+
+    return jsonify({'message': 'Funds added successfully'}), 200
+
+
+@app.route('/withdraw-funds/<int:user_id>', methods=['POST'])
+def withdraw_funds(user_id):
+    data = request.get_json()
+    funds_str = data.get('funds')
+
+    if not funds_str:
+        return jsonify({'error': 'Funds amount is required'}), 400
+
+    try:
+        funds = float(funds_str)
+    except ValueError:
+        return jsonify({'error': 'Invalid funds amount'}), 400
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    if user.funds < funds:
+        return jsonify({'error': 'Insufficient funds'}), 400
+
+    user.funds -= funds
+    db.session.commit()
+
+    return jsonify({'message': 'Funds withdrawn successfully'}), 200
+
+
+
 @app.route('/stocks', methods=['GET'])
 def symbols():
     symbols = StockPrice.query.distinct(StockPrice.symbol).all()
@@ -156,7 +225,6 @@ def get_user_holdings(user_id):
 
     return jsonify({'holdings': holdings_data}), 200
 
-
 @app.route('/buy/<int:user_id>', methods=['POST'])
 def buy_stock(user_id):
     data = request.get_json()
@@ -166,6 +234,21 @@ def buy_stock(user_id):
 
     if not symbol or not quantity or not avg_buy_price:
         return jsonify({'error': 'Symbol, quantity, and avg_buy_price are required'}), 400
+
+    stock_price = StockPrice.query.filter_by(symbol=symbol).first()
+    if not stock_price:
+        return jsonify({'error': 'Stock price not found'}), 404
+
+    total_cost = quantity * avg_buy_price
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    if user.funds < total_cost:
+        return jsonify({'error': 'Insufficient funds'}), 400
+
+    # Deduct total cost from user's funds
+    user.funds -= total_cost
 
     holding = Holdings.query.filter_by(user_id=user_id, symbol=symbol).first()
     if not holding:
@@ -195,11 +278,24 @@ def sell_stock(user_id):
     if not holding or holding.quantity < quantity:
         return jsonify({'error': 'Insufficient quantity to sell'}), 400
 
+    stock_price = StockPrice.query.filter_by(symbol=symbol).first()
+    if not stock_price:
+        return jsonify({'error': 'Stock price not found'}), 404
+
+    total_sale = quantity * stock_price.price
+
     # Update holding quantity
     holding.quantity -= quantity
+
+    # Add total sale to user's funds
+    user = User.query.get(user_id)
+    user.funds += total_sale
+
     db.session.commit()
 
     return jsonify({'message': 'Stock sold successfully'}), 200
+
+
 
 
 @app.route('/orders/<int:user_id>', methods=['POST'])
@@ -275,57 +371,12 @@ def emit_ticker_data():
                 'price': symbol.price
             } for symbol in symbols]
             socketio.emit('stocks', {'symbols': symbol_data})
-            time.sleep(2)
+            time.sleep(1)
 
     # close connection
     socketio.emit('message', {'message': 'Connection closed'})
     print('Client disconnected')
 
-
-# def emit_ticker_data():
-#     start_time = time.time()
-#     with app.app_context():
-#         connected = True
-#         def disconnect():
-#             nonlocal connected
-#             connected = False
-#             print("Client Disconnected")
-#         socketio.on_event('disconnect', disconnect)
-
-#         while time.time() - start_time < 600 and connected:
-#             print("Emit watchlist")
-#             symbols = StockPrice.query.all()
-#             symbol_data = [{
-#                 'id': symbol.id,
-#                 'symbol': symbol.symbol,
-#                 'datetime': symbol.datetime.strftime('%Y-%m-%d %H:%M:%S'),
-#                 'price': symbol.price + random.randint(-10, 10)
-#             } for symbol in symbols]
-#             socketio.emit('stocks', {'symbols': symbol_data})
-#             time.sleep(2)
-
-#     # close connection
-#     socketio.emit('message', {'message': 'Connection closed'})
-#     print('Client disconnected')
-
-# def emit_ticker_data():
-#     start_time = time.time()
-#     while time.time() - start_time < 600:  # At max 10 minutes
-#         # print("Emit watchlist")
-#         with app.app_context():
-#             symbols = StockPrice.query.all()
-#             symbol_data = [{
-#                 'id': symbol.id,
-#                 'symbol': symbol.symbol,
-#                 'datetime': symbol.datetime.strftime('%Y-%m-%d %H:%M:%S'),
-#                 'price': symbol.price + random.randint(-10, 10)
-#             } for symbol in symbols]
-#             socketio.emit('stocks', {'symbols': symbol_data})
-#             time.sleep(10)
-
-#     # close connection
-#     socketio.emit('message', {'message': 'Connection closed'})
-#     print('Client disconnected')
 
 
 if __name__ == '__main__':

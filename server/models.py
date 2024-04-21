@@ -3,7 +3,6 @@ from sqlalchemy import Column, Integer, String, DateTime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
-
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -13,6 +12,7 @@ class User(db.Model):
     user_name = db.Column(db.String(120), nullable=False)
     broker = db.Column(db.String(120), nullable=False, default='Zerodha')
     password_hash = db.Column(db.String(128), nullable=False)
+    funds = db.Column(db.Float, nullable=False, default=0.0)  # New column for available funds
 
     @property
     def password(self):
@@ -26,7 +26,7 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return f"<User(id={self.id}, user_type={self.user_type}, email={self.email}, user_name={self.user_name}, broker={self.broker})>"
+        return f"<User(id={self.id}, user_type={self.user_type}, email={self.email}, user_name={self.user_name}, broker={self.broker}, funds={self.funds})>"
 
 class StockPrice(db.Model):
     __tablename__ = 'stock_prices'
