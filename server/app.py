@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from datetime import datetime
 from flask_cors import CORS
-from models import db, HistoricalPrice, User, StockPrice
+from models import db, HistoricalPrice, User, StockPrice, Holdings
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import os
 import json
@@ -26,7 +26,6 @@ jwt = JWTManager(app)
 def index():
     return 'Hello, World!'
 
-
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
@@ -48,7 +47,7 @@ def signup():
     # Generate JWT token for the new user
     access_token = create_access_token(identity=new_user.id)
 
-    return jsonify({'message': 'User created successfully', 'access_token': access_token}), 201
+    return jsonify({'message': 'User created successfully', 'user_id': new_user.id, 'access_token': access_token}), 201
 
 
 @app.route('/login', methods=['POST'])
@@ -62,7 +61,8 @@ def login():
         return jsonify({'error': 'Invalid email or password'}), 401
 
     access_token = create_access_token(identity=user.id)
-    return jsonify({'access_token': access_token}), 200
+    return jsonify({'user_id': user.id, 'access_token': access_token}), 200
+
 
 
 @app.route('/protected', methods=['GET'])
@@ -136,6 +136,64 @@ def historical_data():
         })
 
     return jsonify(result)
+
+@app.route('/holdings/<int:user_id>', methods=['GET'])
+def get_user_holdings(user_id):
+    holdings = Holdings.query.filter_by(user_id=user_id).all()
+    holdings_data = [{
+        'id': holding.id,
+        'user_id': holding.user_id,
+        'symbol': holding.symbol,
+        'quantity': holding.quantity,
+        'avg_buy_price': holding.avg_buy_price
+    } for holding in holdings]
+
+    return jsonify({'holdings': holdings_data}), 200
+
+
+@app.route('/buy/<int:user_id>', methods=['POST'])
+def buy_stock(user_id):
+    data = request.get_json()
+    symbol = data.get('symbol')
+    quantity = data.get('quantity')
+    avg_buy_price = data.get('avg_buy_price')
+
+    if not symbol or not quantity or not avg_buy_price:
+        return jsonify({'error': 'Symbol, quantity, and avg_buy_price are required'}), 400
+
+    holding = Holdings.query.filter_by(user_id=user_id, symbol=symbol).first()
+    if not holding:
+        # If the stock doesn't exist for the user, create a new row
+        new_holding = Holdings(user_id=user_id, symbol=symbol, quantity=quantity, avg_buy_price=avg_buy_price)
+        db.session.add(new_holding)
+    else:
+        # If the stock exists, update the quantity and average buy price
+        new_avg_buy_price = ((holding.quantity * holding.avg_buy_price) + (quantity * avg_buy_price)) / (holding.quantity + quantity)
+        holding.quantity += quantity
+        holding.avg_buy_price = new_avg_buy_price
+
+    db.session.commit()
+
+    return jsonify({'message': 'Stock bought successfully'}), 200
+
+@app.route('/sell/<int:user_id>', methods=['POST'])
+def sell_stock(user_id):
+    data = request.get_json()
+    symbol = data.get('symbol')
+    quantity = data.get('quantity')
+
+    if not symbol or not quantity:
+        return jsonify({'error': 'Symbol and quantity are required'}), 400
+
+    holding = Holdings.query.filter_by(user_id=user_id, symbol=symbol).first()
+    if not holding or holding.quantity < quantity:
+        return jsonify({'error': 'Insufficient quantity to sell'}), 400
+
+    # Update holding quantity
+    holding.quantity -= quantity
+    db.session.commit()
+
+    return jsonify({'message': 'Stock sold successfully'}), 200
 
 
 

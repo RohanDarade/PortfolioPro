@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <div className=''>
-        <StockPriceUpdater />
+        {/* <StockPriceUpdater /> */}
         <Navbar /> {/* Render the Navbar component outside of the Routes */}
         <Routes>
           <Route exact path="/" element={<Home />} />

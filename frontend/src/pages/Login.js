@@ -14,7 +14,8 @@ function Login() {
     e.preventDefault();
     axios.post('http://127.0.0.1:5000/login', userData)
       .then(response => {
-        const { access_token } = response.data;
+        const { user_id, access_token } = response.data;
+        localStorage.setItem('user_id', user_id);
         localStorage.setItem('token', access_token);
         console.log('Login success!');
         
@@ -25,7 +26,6 @@ function Login() {
         // Handle error
       });
   };
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;

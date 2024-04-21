@@ -18,7 +18,7 @@ function Signup() {
       user_type: 'individual', // Default value
       broker: 'Zerodha' // Fixed value
     };
-
+  
     axios.post('http://127.0.0.1:5000/signup', JSON.stringify(newUser), {
       headers: {
         'Content-Type': 'application/json'
@@ -26,8 +26,10 @@ function Signup() {
     })
       .then(response => {
         console.log(response.data);
-        // Set JWT token in local storage
-        localStorage.setItem('token', response.data.access_token);
+        const { user_id, access_token } = response.data;
+        // Set user_id and token in local storage
+        localStorage.setItem('user_id', user_id);
+        localStorage.setItem('token', access_token);
         // Redirect to dashboard after successful signup
         navigate('/dashboard');
       })
@@ -35,6 +37,7 @@ function Signup() {
         console.error(error);
       });
   };
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
