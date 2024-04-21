@@ -223,7 +223,7 @@ def post_order(user_id):
 
 @app.route('/orders/<int:user_id>', methods=['GET'])
 def get_orders(user_id):
-    orders = Order.query.filter_by(user_id=user_id).all()
+    orders = Order.query.filter_by(user_id=user_id).order_by(Order.date.desc()).all()
     if not orders:
         return jsonify({'message': 'No order history for this user'}), 404
 
