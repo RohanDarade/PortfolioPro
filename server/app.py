@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from datetime import datetime
 from flask_cors import CORS
-from models import db, HistoricalPrice, User, StockPrice, Holdings
+from models import db, HistoricalPrice, User, StockPrice, Holdings, Order
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_socketio import SocketIO, emit
 import os
@@ -200,6 +200,45 @@ def sell_stock(user_id):
     db.session.commit()
 
     return jsonify({'message': 'Stock sold successfully'}), 200
+
+
+@app.route('/orders/<int:user_id>', methods=['POST'])
+def post_order(user_id):
+    data = request.get_json()
+    symbol = data.get('symbol')
+    price = data.get('price')
+    date = datetime.now()
+    quantity = data.get('quantity')
+    trade_type = data.get('trade_type')
+
+    if not symbol or not price or not quantity or not trade_type:
+        return jsonify({'error': 'Symbol, price, quantity, and trade_type are required'}), 400
+
+    new_order = Order(user_id=user_id, symbol=symbol, price=price, date=date, quantity=quantity, trade_type=trade_type)
+    db.session.add(new_order)
+    db.session.commit()
+
+    return jsonify({'message': 'Order placed successfully'}), 201
+
+
+@app.route('/orders/<int:user_id>', methods=['GET'])
+def get_orders(user_id):
+    orders = Order.query.filter_by(user_id=user_id).all()
+    if not orders:
+        return jsonify({'message': 'No order history for this user'}), 404
+
+    orders_data = [{
+        'id': order.id,
+        'user_id': order.user_id,
+        'symbol': order.symbol,
+        'price': order.price,
+        'date': order.date.strftime('%Y-%m-%d %H:%M:%S'),
+        'quantity': order.quantity,
+        'trade_type': order.trade_type
+    } for order in orders]
+
+    return jsonify({'orders': orders_data}), 200
+
 
 
 @socketio.on('connect')

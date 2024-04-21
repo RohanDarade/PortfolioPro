@@ -35,6 +35,8 @@ function Signup() {
       })
       .catch(error => {
         console.error(error);
+        alert(`Error: ${error.response.data.error}`)
+
       });
   };
   

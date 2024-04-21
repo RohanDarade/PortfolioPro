@@ -50,6 +50,21 @@ class Holdings(db.Model):
     def __repr__(self):
         return f"<Holdings(user_id={self.user_id}, symbol='{self.symbol}', quantity={self.quantity}, avg_buy_price={self.avg_buy_price})>"
 
+class Order(db.Model):
+    __tablename__ = 'orders'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    symbol = db.Column(db.String(10), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    trade_type = db.Column(db.String(5), nullable=False)  # 'buy' or 'sell'
+
+    def __repr__(self):
+        return f"<Order(user_id={self.user_id}, symbol='{self.symbol}', price={self.price}, date={self.date}, quantity={self.quantity}, trade_type='{self.trade_type}')>"
+
+
 
 class HistoricalPrice(db.Model):
     __tablename__ = 'historical_prices'

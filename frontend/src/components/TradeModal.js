@@ -13,9 +13,9 @@ function TradeModal({ symbol, price, action, onClose }) {
       quantity: quantity,
       avg_buy_price: price // Assuming price is the average buy price
     };
-
+    const user_id = localStorage.getItem('user_id');
     const endpoint = action.toLowerCase(); // Convert action to lowercase
-
+  
     axios.post(`http://127.0.0.1:5000/${endpoint}/${localStorage.getItem('user_id')}`, data)
       .then(response => {
         console.log(response.data);
@@ -27,6 +27,20 @@ function TradeModal({ symbol, price, action, onClose }) {
         setTimeout(() => {
           setResponseMessage("");
           onClose();
+          // Call orders API endpoint and post the order
+          const orderData = {
+            symbol: symbol,
+            price: price,
+            date: new Date().toISOString(),
+            quantity: quantity
+          };
+          axios.post(`http://127.0.0.1:5000/orders/${user_id}`, orderData)
+            .then(response => {
+              console.log(response.data);
+            })
+            .catch(error => {
+              console.error(error);
+            });
         }, 2000);
       })
       .catch(error => {
@@ -38,6 +52,7 @@ function TradeModal({ symbol, price, action, onClose }) {
         }, 2000);
       });
   };
+  
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
