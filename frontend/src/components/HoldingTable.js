@@ -5,7 +5,7 @@ function HoldingTable({ holdings }) {
 
     return (
         <div className="w-full h-full rounded-md overflow-y-auto">
-            <table className="w-full table-auto">
+            <table className="w-full  table-auto">
                 <thead>
                     <tr className="bg-gray-200">
                         <th className="px-4 py-2 text-sm">Symbol</th>

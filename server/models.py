@@ -28,6 +28,16 @@ class User(db.Model):
     def __repr__(self):
         return f"<User(id={self.id}, user_type={self.user_type}, email={self.email}, user_name={self.user_name}, broker={self.broker})>"
 
+class StockPrice(db.Model):
+    __tablename__ = 'stock_prices'
+
+    id = Column(Integer, primary_key=True)
+    symbol = Column(String(255), nullable=False)
+    datetime = Column(DateTime, nullable=False)
+    price = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return f"<StockPrice(symbol={self.symbol}, datetime={self.datetime}, price={self.price})>"
 
 
 class HistoricalPrice(db.Model):

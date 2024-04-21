@@ -9,19 +9,19 @@ function Card({ holdings }) {
 
     return (
         <div className="grid grid-cols-4 m-4 gap-2">
-            <div className="border p-4 shadow-md rounded-md">
+            <div className="border bg-gradient-to-l from-sky-100 to-indigo-100 p-4 shadow-md rounded-md">
                 <h3 className="font-light mb-2">Total Invested Value</h3>
                 <p className="text-xl font-bold">{totalInvestedValue}</p>
             </div>
-            <div className="border p-4 shadow-md rounded-md">
+            <div className="border bg-gradient-to-l from-sky-100 to-indigo-100 p-4 shadow-md rounded-md">
                 <h3 className="font-light mb-2">Total Market Value</h3>
                 <p className="text-xl font-bold">{totalMarketValue}</p>
             </div>
-            <div className="border p-4 shadow-md rounded-md">
+            <div className="border bg-gradient-to-l from-sky-100 to-indigo-100 p-4 shadow-md rounded-md">
                 <h3 className="font-light mb-2">Total {totalGainLoss >= 0 ? 'Profit' : 'Loss'}</h3>
                 <p className={`text-xl font-bold ${totalGainLoss >= 0 ? 'text-green-500' : 'text-red-500'}`}>{totalGainLoss}</p>
             </div>
-            <div className="border p-4 shadow-md rounded-md">
+            <div className="border bg-gradient-to-l from-sky-100 to-indigo-100 p-4 shadow-md rounded-md">
                 <h3 className="font-light mb-2">CAGR</h3>
                 <p className="text-xl font-bold">{cagr}%</p>
             </div>

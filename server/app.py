@@ -3,12 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 from datetime import datetime
 from flask_cors import CORS
-from models import db, HistoricalPrice, User
+from models import db, HistoricalPrice, User, StockPrice
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import os
+import json
 
 app = Flask(__name__)
-
 CORS(app, origins=["http://localhost:3000"])
 
 
@@ -72,6 +72,38 @@ def protected():
     return jsonify(user_id=current_user_id), 200
 
 
+@app.route('/update-price', methods=['POST'])
+def update_price():
+    data = request.get_json()
+    for item in data:
+        symbol = item.get('symbol')
+        price = item.get('price')
+
+        existing_stock = StockPrice.query.filter_by(symbol=symbol).first()
+        if existing_stock:
+            existing_stock.price = price
+        else:
+            stock_price = StockPrice(symbol=symbol, datetime=datetime.now(), price=price)
+            db.session.add(stock_price)
+
+    db.session.commit()
+
+    return jsonify({'message': 'Prices updated successfully'}), 201
+
+
+@app.route('/stocks', methods=['GET'])
+def symbols():
+    symbols = StockPrice.query.distinct(StockPrice.symbol).all()
+    symbol_data = [{
+        'id': symbol.id,
+        'symbol': symbol.symbol,
+        'datetime': symbol.datetime.strftime('%Y-%m-%d %H:%M:%S'),
+        'price': symbol.price
+    } for symbol in symbols]
+    return jsonify({'symbols': symbol_data})
+
+
+
 @app.route('/historical-data')
 def historical_data():
     symbol = request.args.get('symbol')
@@ -104,6 +136,8 @@ def historical_data():
         })
 
     return jsonify(result)
+
+
 
 if __name__ == '__main__':
     with app.app_context():
