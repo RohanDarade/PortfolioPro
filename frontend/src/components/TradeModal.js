@@ -3,6 +3,8 @@ import axios from "axios";
 
 function TradeModal({ symbol, price, action, onClose }) {
   const [quantity, setQuantity] = useState(0);
+  const [responseMessage, setResponseMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleTrade = () => {
     // Perform buy/sell action
@@ -12,17 +14,28 @@ function TradeModal({ symbol, price, action, onClose }) {
       avg_buy_price: price // Assuming price is the average buy price
     };
 
-    axios.post(`http://127.0.0.1:5000/${action}/${localStorage.getItem('user_id')}`, data)
+    const endpoint = action.toLowerCase(); // Convert action to lowercase
+
+    axios.post(`http://127.0.0.1:5000/${endpoint}/${localStorage.getItem('user_id')}`, data)
       .then(response => {
         console.log(response.data);
+        // Display response message
+        setResponseMessage(response.data.message);
         // Reset quantity
         setQuantity(0);
-        // Close the modal
-        onClose();
+        // Close the modal after 2 seconds
+        setTimeout(() => {
+          setResponseMessage("");
+          onClose();
+        }, 2000);
       })
       .catch(error => {
         console.error(error);
         // Handle error
+        setErrorMessage(error.response.data.error);
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 2000);
       });
   };
 
@@ -42,13 +55,15 @@ function TradeModal({ symbol, price, action, onClose }) {
           />
         </div>
         <div className="flex justify-between mt-4">
-          <button onClick={handleTrade} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          <button onClick={handleTrade} className={`bg-${action === "Sell" ? "FBE0DF" : "DAE9FF"} hover:bg-${action === "Sell" ? "EB2821" : "0160FF"} border border-${action === "Sell" ? "EB2821" : "0160FF"} text-${action === "Sell" ? "EB2821" : "0160FF"} hover:text-white font-bold py-2 px-10 rounded`}>
             {action}
           </button>
-          <button onClick={onClose} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+          <button onClick={onClose} className="border border-gray-600 text-gray-600 py-2 px-8 rounded">
             Cancel
           </button>
         </div>
+        {responseMessage && <p className="mt-4 text-center text-green-600">{responseMessage}</p>}
+        {errorMessage && <p className="mt-4 text-center text-red-600">{errorMessage}</p>}
       </div>
     </div>
   );
