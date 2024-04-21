@@ -1,0 +1,102 @@
+[
+    {
+        "symbol": "TCS",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 3500.50
+    },
+    {
+        "symbol": "INFY",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 1500.75
+    },
+    {
+        "symbol": "HDFCBANK",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 1400.25
+    },
+    {
+        "symbol": "RELIANCE",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 2500.60
+    },
+    {
+        "symbol": "ICICIBANK",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 1000.80
+    },
+    {
+        "symbol": "HINDUNILVR",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 2000.30
+    },
+    {
+        "symbol": "AXISBANK",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 800.45
+    },
+    {
+        "symbol": "MARUTI",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 4500.20
+    },
+    {
+        "symbol": "ITC",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 300.65
+    },
+    {
+        "symbol": "SBIN",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 450.75
+    },
+    {
+        "symbol": "ASIANPAINT",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 2500.35
+    },
+    {
+        "symbol": "HDFCLIFE",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 600.90
+    },
+    {
+        "symbol": "TATASTEEL",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 800.10
+    },
+    {
+        "symbol": "BPCL",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 380.25
+    },
+    {
+        "symbol": "ULTRACEMCO",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 4200.70
+    },
+    {
+        "symbol": "IOC",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 160.40
+    },
+    {
+        "symbol": "ONGC",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 120.55
+    },
+    {
+        "symbol": "TECHM",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 1100.25
+    },
+    {
+        "symbol": "POWERGRID",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 180.90
+    },
+    {
+        "symbol": "UPL",
+        "datetime": "2022-10-01 09:00:00",
+        "price": 250.30
+    }
+]

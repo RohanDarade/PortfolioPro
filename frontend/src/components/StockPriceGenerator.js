@@ -5,7 +5,7 @@ function StockPriceGenerator() {
   const [stockPrices, setStockPrices] = useState([]);
 
   useEffect(() => {
-    const intervalId = setInterval(updatePrices, 20000); // Update prices every 2 seconds
+    const intervalId = setInterval(updatePrices, 2000); // Update prices every 2 seconds
 
     return () => {
       clearInterval(intervalId); // Clear interval when component unmounts
