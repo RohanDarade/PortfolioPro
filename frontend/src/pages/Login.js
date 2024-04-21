@@ -36,16 +36,16 @@ function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8">
+    <div className="max-w-md mx-auto mt-8 border p-8 rounded shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <label className="block">
           <span className="text-gray-700">Email</span>
-          <input type="email" name="email" value={userData.email} onChange={handleChange} className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+          <input type="email" name="email" value={userData.email} onChange={handleChange} className="border-gray-300 p-2 mt-1 block w-full rounded-md border-gray-300 drop-shadow-md outline-none  focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
         </label>
         <label className="block">
           <span className="text-gray-700">Password</span>
-          <input type="password" name="password" value={userData.password} onChange={handleChange} className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
+          <input type="password" name="password" value={userData.password} onChange={handleChange} className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm outline-none focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" required />
         </label>
         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Login

@@ -1,36 +1,63 @@
-import React from "react";
-import holdingsData from "./holdings.json";
+import React, { useEffect, useState } from "react";
 import HoldingTable from "./HoldingTable";
-import AllocationChart from "./AllocationChart";
 import Card from "./Card";
+import axios from "axios";
+import AllocationChart from "./AllocationChart";
 
 function Portfolio() {
-  const updatedHoldings = holdingsData.data.map((holding) => ({
-    symbol: holding.tradingsymbol,
+  const [holdings, setHoldings] = useState([]);
+  const [stocks, setStocks] = useState([]);
+
+  const fetchHoldings = async () => {
+    const user_id = localStorage.getItem("user_id");
+    try {
+      const response = await axios.get(`http://127.0.0.1:5000/holdings/${user_id}`);
+      setHoldings(response.data.holdings);
+      console.log(response.data.holdings);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchStocks = async () => {
+    try {
+      const response = await axios.get(`http://127.0.0.1:5000/stocks`);
+      setStocks(response.data.symbols);
+      console.log(response.data.symbols);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchHoldings();
+    fetchStocks();
+
+    const interval = setInterval(() => {
+      fetchHoldings();
+      fetchStocks();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const updatedHoldings = holdings.map((holding) => ({
+    symbol: holding.symbol,
     shares: holding.quantity,
-    avgCost: holding.average_price.toFixed(2), // Limit to 2 decimal places
-    marketPrice: holding.last_price.toFixed(2), // Limit to 2 decimal places
-    marketValue: (holding.last_price * holding.quantity).toFixed(2), // Limit to 2 decimal places
-    gainLoss: (
-      holding.last_price * holding.quantity -
-      holding.average_price * holding.quantity
-    ).toFixed(2), // Limit to 2 decimal places
-    percentGainLoss:
-      holding.average_price !== 0
-        ? (
-            ((holding.last_price * holding.quantity -
-              holding.average_price * holding.quantity) /
-              (holding.average_price * holding.quantity)) *
-            100
-          ).toFixed(2)
-        : 0, // Handle division by zero
+    avgCost: holding.avg_buy_price.toFixed(2),
+    marketPrice: stocks.find((stock) => stock.symbol === holding.symbol)?.price.toFixed(2) || 0,
+    marketValue: (stocks.find((stock) => stock.symbol === holding.symbol)?.price * holding.quantity).toFixed(2),
+    gainLoss: ((stocks.find((stock) => stock.symbol === holding.symbol)?.price * holding.quantity) - (holding.avg_buy_price * holding.quantity)).toFixed(2),
+    percentGainLoss: (((stocks.find((stock) => stock.symbol === holding.symbol)?.price * holding.quantity) - (holding.avg_buy_price * holding.quantity)) / (holding.avg_buy_price * holding.quantity) * 100).toFixed(2)
   }));
 
   return (
     <div>
       <div>
+        <div className="flex justify-center flex-row">
         <Card holdings={updatedHoldings} />
-        {/* <AllocationChart holdings={updatedHoldings} /> */}
+        <AllocationChart holdings={updatedHoldings} />
+        </div>
         <HoldingTable holdings={updatedHoldings} />
       </div>
     </div>

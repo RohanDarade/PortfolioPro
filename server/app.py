@@ -248,24 +248,84 @@ def handle_ticker_connection():
     ticker_thread = Thread(target=emit_ticker_data)
     ticker_thread.start()
 
+
 def emit_ticker_data():
     start_time = time.time()
-    while time.time() - start_time < 600:  # At max 10 minutes
-        # print("Emit watchlist")
-        with app.app_context():
+    with app.app_context():
+        connected = True
+        def disconnect():
+            nonlocal connected
+            connected = False
+            print("Client Disconnected")
+        socketio.on_event('disconnect', disconnect)
+
+        while time.time() - start_time < 600 and connected:
+            print("Emit watchlist")
             symbols = StockPrice.query.all()
+            for symbol in symbols:
+                new_price = symbol.price + random.randint(-10, 10)
+                symbol.price = new_price
+                db.session.commit()  # Update the price in the database
+
+            # Emit the updated prices to the client
             symbol_data = [{
                 'id': symbol.id,
                 'symbol': symbol.symbol,
                 'datetime': symbol.datetime.strftime('%Y-%m-%d %H:%M:%S'),
-                'price': symbol.price + random.randint(-10, 10)
+                'price': symbol.price
             } for symbol in symbols]
             socketio.emit('stocks', {'symbols': symbol_data})
-            time.sleep(10)
+            time.sleep(2)
 
     # close connection
     socketio.emit('message', {'message': 'Connection closed'})
     print('Client disconnected')
+
+
+# def emit_ticker_data():
+#     start_time = time.time()
+#     with app.app_context():
+#         connected = True
+#         def disconnect():
+#             nonlocal connected
+#             connected = False
+#             print("Client Disconnected")
+#         socketio.on_event('disconnect', disconnect)
+
+#         while time.time() - start_time < 600 and connected:
+#             print("Emit watchlist")
+#             symbols = StockPrice.query.all()
+#             symbol_data = [{
+#                 'id': symbol.id,
+#                 'symbol': symbol.symbol,
+#                 'datetime': symbol.datetime.strftime('%Y-%m-%d %H:%M:%S'),
+#                 'price': symbol.price + random.randint(-10, 10)
+#             } for symbol in symbols]
+#             socketio.emit('stocks', {'symbols': symbol_data})
+#             time.sleep(2)
+
+#     # close connection
+#     socketio.emit('message', {'message': 'Connection closed'})
+#     print('Client disconnected')
+
+# def emit_ticker_data():
+#     start_time = time.time()
+#     while time.time() - start_time < 600:  # At max 10 minutes
+#         # print("Emit watchlist")
+#         with app.app_context():
+#             symbols = StockPrice.query.all()
+#             symbol_data = [{
+#                 'id': symbol.id,
+#                 'symbol': symbol.symbol,
+#                 'datetime': symbol.datetime.strftime('%Y-%m-%d %H:%M:%S'),
+#                 'price': symbol.price + random.randint(-10, 10)
+#             } for symbol in symbols]
+#             socketio.emit('stocks', {'symbols': symbol_data})
+#             time.sleep(10)
+
+#     # close connection
+#     socketio.emit('message', {'message': 'Connection closed'})
+#     print('Client disconnected')
 
 
 if __name__ == '__main__':

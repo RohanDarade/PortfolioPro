@@ -8,7 +8,7 @@ function Card({ holdings }) {
     const cagr = 10.25; // Example CAGR value
 
     return (
-        <div className="grid grid-cols-4 m-4 gap-2">
+        <div className="grid grid-cols-2 m-4 gap-2">
             <div className="border bg-gradient-to-l from-sky-100 to-indigo-100 p-4 shadow-md rounded-md">
                 <h3 className="font-light mb-2">Total Invested Value</h3>
                 <p className="text-xl font-bold">{totalInvestedValue}</p>
