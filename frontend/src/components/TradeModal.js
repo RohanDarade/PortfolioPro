@@ -32,7 +32,8 @@ function TradeModal({ symbol, price, action, onClose }) {
             symbol: symbol,
             price: price,
             date: new Date().toISOString(),
-            quantity: quantity
+            quantity: quantity,
+            trade_type: action
           };
           axios.post(`http://127.0.0.1:5000/orders/${user_id}`, orderData)
             .then(response => {
