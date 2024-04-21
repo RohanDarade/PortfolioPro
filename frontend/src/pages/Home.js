@@ -3,8 +3,12 @@ import React, { useState } from "react";
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleOnclick = () => {
+  const onClickLogin = () => {
     window.location.href = "/login";
+  }
+
+  const onClickSignUp = () => {
+    window.location.href = "/signup";
   }
 
 
@@ -23,13 +27,13 @@ const Home = () => {
       </div>
       <div className="">
         <button
-          onClick={handleOnclick}
+          onClick={onClickSignUp}
           className="m-5 py-2 px-5 bg-black text-white rounded-md "
         >
           Sign Up
         </button>
         <button
-          onClick={handleOnclick}
+          onClick={onClickLogin}
           className="m-5 py-2 px-5 border border-black text-black rounded-md"
         >
           Login
