@@ -14,6 +14,15 @@
 
 </div>
 
+## Screenshots
+
+### Portfolio
+![Screenshot 1](/frontend/assets/Screenshot1.png)
+### Historical Chart of index
+![Screenshot 2](./frontend/assets/Screenshot2.png)
+### Watchlist
+![Screenshot 3](./frontend/assets/Screenshot3.png)
+
 
 ## Features
 
