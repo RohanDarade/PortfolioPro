@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import api from "../config/api";
 
-
 function TradeModal({ symbol, price, action, onClose }) {
   const [quantity, setQuantity] = useState(0);
   const [responseMessage, setResponseMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
 
   const handleTrade = () => {
+    setLoading(true); // Set loading to true when trade is initiated
     // Perform buy/sell action
     const data = {
       symbol: symbol,
@@ -17,7 +18,7 @@ function TradeModal({ symbol, price, action, onClose }) {
     };
     const user_id = localStorage.getItem('user_id');
     const endpoint = action.toLowerCase(); // Convert action to lowercase
-  
+
     axios.post(`${api}/${endpoint}/${localStorage.getItem('user_id')}`, data)
       .then(response => {
         console.log(response.data);
@@ -44,6 +45,7 @@ function TradeModal({ symbol, price, action, onClose }) {
             .catch(error => {
               console.error(error);
             });
+          setLoading(false); // Set loading to false after request completes
         }, 2000);
       })
       .catch(error => {
@@ -53,9 +55,9 @@ function TradeModal({ symbol, price, action, onClose }) {
         setTimeout(() => {
           setErrorMessage("");
         }, 2000);
+        setLoading(false); // Set loading to false after request completes
       });
   };
-  
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
@@ -73,8 +75,12 @@ function TradeModal({ symbol, price, action, onClose }) {
           />
         </div>
         <div className="flex justify-between mt-4">
-          <button onClick={handleTrade} className={`bg-${action === "Sell" ? "[#FBE0DF]" : "[#DAE9FF]"} hover:bg-${action === "Sell" ? "[#EB2821]" : "[#0160FF]"} border border-${action === "Sell" ? "[#EB2821]" : "[#0160FF]"} text-${action === "Sell" ? "[#EB2821]" : "[#0160FF]"} hover:text-white font-bold py-2 px-10 rounded`}>
-            {action}
+          <button
+            onClick={handleTrade}
+            disabled={loading} // Disable the button when loading is true
+            className={`bg-${action === "Sell" ? "[#FBE0DF]" : "[#DAE9FF]"} hover:bg-${action === "Sell" ? "[#EB2821]" : "[#0160FF]"} border border-${action === "Sell" ? "[#EB2821]" : "[#0160FF]"} text-${action === "Sell" ? "[#EB2821]" : "[#0160FF]"} hover:text-white font-bold py-2 px-10 rounded`}
+          >
+            {loading ? 'Processing...' : action}
           </button>
           <button onClick={onClose} className="border border-gray-600 text-gray-600 py-2 px-8 rounded">
             Cancel

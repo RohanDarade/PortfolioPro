@@ -5,21 +5,26 @@ import api from "../config/api";
 function Account() {
   const [userInfo, setUserInfo] = useState({});
   const [funds, setFunds] = useState(null);
+  const [loading, setLoading] = useState(false);
   const user_id = localStorage.getItem("user_id");
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`${api}/users/${user_id}`)
       .then((response) => {
         setUserInfo(response.data.user);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
+        setLoading(false);
         // Handle error
       });
   }, []);
 
   const handleAddFunds = () => {
+    setLoading(true);
     axios
       .post(`${api}/add-funds/${user_id}`, { funds })
       .then((response) => {
@@ -30,14 +35,17 @@ function Account() {
           funds: prevUserInfo.funds + parseInt(funds),
         }));
         alert(response.data.message);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
+        setLoading(false);
         // Handle error
       });
   };
-  
+
   const handleWithdrawFunds = () => {
+    setLoading(true);
     axios
       .post(`${api}/withdraw-funds/${user_id}`, { funds })
       .then((response) => {
@@ -48,13 +56,15 @@ function Account() {
           funds: prevUserInfo.funds - parseInt(funds),
         }));
         alert(response.data.message);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
+        setLoading(false);
         // Handle error
       });
   };
-  
+
   const availableFunds = userInfo.funds || 0;
 
   return (
@@ -89,29 +99,29 @@ function Account() {
           </div>
         </div>
         <div className="flex flex-col p-4 m-4 border drop-shadow-sm rounded-md justify-between">
-        <input
-          className="px-4 py-2 w-full border border-gray-400 drop-shadow-sm rounded"
-          placeholder="Enter Amount"
-          value={funds}
-          onChange={(e) => setFunds(e.target.value)}
-        />
-        <div className="w-full flex flex-row mt-2">
-          <button
-            className="w-full bg-[#DAE9FF] hover:bg-[#0160FF] border border-[#0160FF] text-[#0160FF] hover:text-white font-bold py-2 px-6 mr-2 rounded"
-            onClick={handleAddFunds}
-          >
-            Add Funds
-          </button>
-          <button
-            className="w-full bg-[#FBE0DF] hover:bg-[#EB2821] border border-[#EB2821] text-[#EB2821] hover:text-white font-bold py-2 px-6 rounded"
-            onClick={handleWithdrawFunds}
-          >
-            Withdraw Funds
-          </button>
-
+          <input
+            className="px-4 py-2 w-full border border-gray-400 drop-shadow-sm rounded"
+            placeholder="Enter Amount"
+            value={funds}
+            onChange={(e) => setFunds(e.target.value)}
+          />
+          <div className="w-full flex flex-row mt-2">
+            <button
+              className="w-full bg-[#DAE9FF] hover:bg-[#0160FF] border border-[#0160FF] text-[#0160FF] hover:text-white font-bold py-2 px-6 mr-2 rounded"
+              onClick={handleAddFunds}
+            >
+              Add Funds
+            </button>
+            <button
+              className="w-full bg-[#FBE0DF] hover:bg-[#EB2821] border border-[#EB2821] text-[#EB2821] hover:text-white font-bold py-2 px-6 rounded"
+              onClick={handleWithdrawFunds}
+            >
+              Withdraw Funds
+            </button>
+          </div>
+        </div>
       </div>
-      </div>
-      </div>
+      {loading && <p>Loading...</p>}
     </div>
   );
 }

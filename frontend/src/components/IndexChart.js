@@ -8,21 +8,25 @@ const IndexChart = () => {
   const [fromDate, setFromDate] = useState('2017-01-01');
   const [toDate, setToDate] = useState('2017-01-31');
   const [index, setIndex] = useState('NIFTY 50');
+  const [loading, setLoading] = useState(false); // Add loading state
 
   useEffect(() => {
     fetchData();
   }, [fromDate, toDate, index]);
 
   const fetchData = () => {
+    // setLoading(true); // Set loading to true when fetching data
     let url = `${api}/historical-data?symbol=${index}&from_date=${fromDate}&to_date=${toDate}`;
 
     axios
       .get(url)
       .then((response) => {
         setData(response.data);
+        setLoading(false); // Set loading to false when data is fetched
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
+        setLoading(false); // Set loading to false on error
       });
   };
 
@@ -57,31 +61,35 @@ const IndexChart = () => {
   return (
     <div>
       <div className='flex flex-row mb-4'>
-      <div>
-        <label htmlFor="index" className='font-extralight'>Index:</label>
-        <select id="index" className="bg-gradient-to-l from-sky-100 to-indigo-100 border py-2 px-2 rounded-md mx-2 drop-shadow-md" value={index} onChange={handleIndexChange}>
-          <option value="NIFTY 50">Nifty 50</option>
-          <option value="NIFTY BANK">Nifty Bank</option>
-          {/* Add other options as needed */}
-        </select>
+        <div>
+          <label htmlFor="index" className='font-extralight'>Index:</label>
+          <select id="index" className="bg-gradient-to-l from-sky-100 to-indigo-100 border py-2 px-2 rounded-md mx-2 drop-shadow-md" value={index} onChange={handleIndexChange}>
+            <option value="NIFTY 50">Nifty 50</option>
+            <option value="NIFTY BANK">Nifty Bank</option>
+            {/* Add other options as needed */}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="fromDate" className='font-extralight'>Start Date : </label>
+          <input type="date" className='bg-gradient-to-l from-sky-100 to-indigo-100 border py-2 px-2 rounded-md mx-2 drop-shadow-md' id="fromDate" value={fromDate} onChange={handleFromDateChange} />
+        </div>
+        <div>
+          <label htmlFor="toDate" className="font-extralight">End Date:</label>
+          <input type="date" className="bg-gradient-to-l from-sky-100 to-indigo-100 border py-2 px-2 rounded-md mx-2 drop-shadow-md" id="toDate" value={toDate} onChange={handleToDateChange} />
+        </div>
       </div>
-      <div>
-        <label htmlFor="fromDate" className='font-extralight'>Start Date : </label>
-        <input type="date" className='bg-gradient-to-l from-sky-100 to-indigo-100 border py-2 px-2 rounded-md mx-2 drop-shadow-md' id="fromDate" value={fromDate} onChange={handleFromDateChange} />
-      </div>
-      <div>
-        <label htmlFor="toDate" className="font-extralight">End Date:</label>
-        <input type="date" className="bg-gradient-to-l from-sky-100 to-indigo-100 border py-2 px-2 rounded-md mx-2 drop-shadow-md" id="toDate" value={toDate} onChange={handleToDateChange} />
-      </div>
-      </div>
-      <LineChart width={1000} height={500} data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis domain={['dataMin', 'dataMax']} ticks={generateYAxisTicks()} />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey="price" stroke="rgb(75, 192, 192)" />
-      </LineChart>
+      {loading ? (
+        <p className="text-center">Loading...</p>
+      ) : (
+        <LineChart width={1000} height={500} data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis domain={['dataMin', 'dataMax']} ticks={generateYAxisTicks()} />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="price" stroke="rgb(75, 192, 192)" />
+        </LineChart>
+      )}
     </div>
   );
 };

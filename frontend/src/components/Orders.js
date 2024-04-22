@@ -5,16 +5,19 @@ import api from '../config/api';
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     axios.get(`${api}/orders/${localStorage.getItem('user_id')}`)
       .then(response => {
         setOrders(response.data.orders);
+        setLoading(false); // Set loading to false when orders are fetched
         setError(false);
       })
       .catch(error => {
         console.error(error);
         setError(true);
+        setLoading(false); // Set loading to false on error
       });
   }, []);
 
@@ -24,7 +27,9 @@ function Orders() {
         Your Orders
       </div>
 
-      {error ? (
+      {loading ? (
+        <p className="flex justify-center items-center mt-24 text-3xl text-gray-400 font-extralight">Loading...</p>
+      ) : error ? (
         <p className="flex justify-center items-center mt-24 text-3xl text-gray-400 font-extralight">No Order History...</p>
       ) : (
         <div className="flex flex-col w-[95%] mx-auto border-[1px]  border-[#DCE3EE] border-collapse mt-[35px] rounded-[5px] cursor-pointer border-b-[0px]">

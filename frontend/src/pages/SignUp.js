@@ -10,10 +10,13 @@ function Signup() {
     password: ''
   });
 
+  const [loading, setLoading] = useState(false); // Loading state
+
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true on form submit
     const newUser = {
       ...userData,
       user_type: 'individual', // Default value
@@ -37,7 +40,9 @@ function Signup() {
       .catch(error => {
         console.error(error);
         alert(`Error: ${error.response.data.error}`)
-
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false after request completes
       });
   };
   
@@ -53,6 +58,7 @@ function Signup() {
   return (
     <div className="max-w-md mx-auto mt-8 border p-8 rounded shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Signup</h2>
+      {loading && <div className="text-center mb-4">Loading...</div>} {/* Loader */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <label className="block">
           <span className="text-gray-700">Name</span>
