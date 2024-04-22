@@ -21,7 +21,7 @@ function TradeModal({ symbol, price, action, onClose }) {
 
     axios.post(`${api}/${endpoint}/${localStorage.getItem('user_id')}`, data)
       .then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         // Display response message
         setResponseMessage(response.data.message);
         // Reset quantity
@@ -40,16 +40,16 @@ function TradeModal({ symbol, price, action, onClose }) {
           };
           axios.post(`${api}/orders/${user_id}`, orderData)
             .then(response => {
-              console.log(response.data);
+              // console.log(response.data);
             })
             .catch(error => {
-              console.error(error);
+              // console.error(error);
             });
           setLoading(false); // Set loading to false after request completes
         }, 2000);
       })
       .catch(error => {
-        console.error(error);
+        // console.error(error);
         // Handle error
         setErrorMessage(error.response.data.error);
         setTimeout(() => {

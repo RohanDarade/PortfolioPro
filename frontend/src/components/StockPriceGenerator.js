@@ -16,7 +16,7 @@ function StockPriceGenerator() {
   useEffect(() => {
     async function fetchStockPrices() {
       const response = await axios.get(`${api}/stocks`);
-      console.log(response.data.symbols);
+      // console.log(response.data.symbols);
       setStockPrices(response.data.symbols);
     }
 
@@ -38,7 +38,7 @@ function StockPriceGenerator() {
     }));
   
     await axios.post(`${api}/update-price`, formattedPrices);
-    console.log('Prices updated');
+    // console.log('Prices updated');
   }
   
   

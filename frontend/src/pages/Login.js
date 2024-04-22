@@ -21,11 +21,11 @@ function Login() {
         const { user_id, access_token } = response.data;
         localStorage.setItem('user_id', user_id);
         localStorage.setItem('token', access_token);
-        console.log('Login success!');
+        // console.log('Login success!');
         navigate('/dashboard');
       })
       .catch(error => {
-        console.error(error);
+        // console.error(error);
         alert(`Error: ${error.response.data.error}`)
       })
       .finally(() => {

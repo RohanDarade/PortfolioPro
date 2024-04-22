@@ -15,7 +15,7 @@ function Orders() {
         setError(false);
       })
       .catch(error => {
-        console.error(error);
+        // console.error(error);
         setError(true);
         setLoading(false); // Set loading to false on error
       });

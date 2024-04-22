@@ -29,7 +29,7 @@ function Dashboard() {
         setUserData(response.data);
       })
       .catch(error => {
-        console.error(error);
+        // console.error(error);
         // Handle error
       });
   }, []);

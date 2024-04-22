@@ -17,7 +17,7 @@ function Account() {
         setLoading(false);
       })
       .catch((error) => {
-        console.error(error);
+        // console.error(error);
         setLoading(false);
         // Handle error
       });
@@ -28,7 +28,7 @@ function Account() {
     axios
       .post(`${api}/add-funds/${user_id}`, { funds })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setFunds("");
         setUserInfo((prevUserInfo) => ({
           ...prevUserInfo,
@@ -38,7 +38,7 @@ function Account() {
         setLoading(false);
       })
       .catch((error) => {
-        console.error(error);
+        // console.error(error);
         setLoading(false);
         // Handle error
       });
@@ -49,7 +49,7 @@ function Account() {
     axios
       .post(`${api}/withdraw-funds/${user_id}`, { funds })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setFunds("");
         setUserInfo((prevUserInfo) => ({
           ...prevUserInfo,
@@ -59,7 +59,7 @@ function Account() {
         setLoading(false);
       })
       .catch((error) => {
-        console.error(error);
+        // console.error(error);
         setLoading(false);
         // Handle error
       });

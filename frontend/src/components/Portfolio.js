@@ -16,10 +16,10 @@ function Portfolio() {
     try {
       const response = await axios.get(`${api}/holdings/${user_id}`);
       setHoldings(response.data.holdings);
-      console.log(response.data.holdings);
+      // console.log(response.data.holdings);
       setLoading(false);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -27,9 +27,9 @@ function Portfolio() {
     try {
       const response = await axios.get(`${api}/stocks`);
       setStocks(response.data.symbols);
-      console.log(response.data.symbols);
+      // console.log(response.data.symbols);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 

@@ -29,7 +29,7 @@ function Signup() {
       }
     })
       .then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         const { user_id, access_token } = response.data;
         // Set user_id and token in local storage
         localStorage.setItem('user_id', user_id);
@@ -38,7 +38,7 @@ function Signup() {
         navigate('/dashboard');
       })
       .catch(error => {
-        console.error(error);
+        // console.error(error);
         alert(`Error: ${error.response.data.error}`)
       })
       .finally(() => {

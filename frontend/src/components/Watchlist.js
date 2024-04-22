@@ -12,15 +12,15 @@ function Watchlist() {
     const socket = io(`${api}/`);
 
     socket.on("connect", () => {
-      console.log("connected");
+      // console.log("connected");
     });
     socket.on("stocks", (data) => {
-      console.log("Watchlist socket data", data);
+      // console.log("Watchlist socket data", data);
       setStocks(data.symbols);
       setLoading(false);
     });
     socket.on("disconnect", () => {
-      console.log("Disconnected");
+      // console.log("Disconnected");
     });
 
     // Clean up function to close the socket connection when component unmounts
