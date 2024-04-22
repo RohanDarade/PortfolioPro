@@ -23,11 +23,9 @@
 
 ## Build With
 
-- **Frontend**: React.js, HTML, CSS
-- [![Python][Python]][Python-url]
-- **Database**: MongoDB
-- **APIs**: Financial data APIs for real-time stock information
-- **Deployment**: Heroku, Netlify
+- **Frontend**: React.js
+- **Backend**: Flask
+- **Database**: Sqlite3
 
 ## Getting Started
 
@@ -40,9 +38,12 @@ To get started with PortfolioPro, follow these steps:
 
 - Clone the repo
 
-  ```sh git clone https://github.com/yourusername/PortfolioPro.git`
+  ```sh
+  git clone https://git@github.com:RohanDarade/PortfolioPro.git
+  cd PortfolioPro
+  ```
 
-- Setup Log ingestion server
+- Setup server
 
   1. Go to `server` directory
      ```sh
@@ -60,8 +61,8 @@ To get started with PortfolioPro, follow these steps:
   4. Add data from csv to database
  
      ```sh
-    python populate.py
-    ```
+     python populate.py
+     ```
 
     The server should now be running on [http://127.0.0.1:5000](http://127.0.0.1:5000).
 
