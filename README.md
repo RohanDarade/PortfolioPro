@@ -67,11 +67,12 @@ To get started with PortfolioPro, follow these steps:
      ```sh
      python app.py
      ```
-  4. Add data from csv to database
+    <!--  4. Add data from csv to database
  
      ```sh
      python populate.py
      ```
+    --->
 
     The server should now be running on [http://127.0.0.1:5000](http://127.0.0.1:5000).
 
