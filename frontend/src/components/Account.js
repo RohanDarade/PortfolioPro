@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import api from "../config/api";
 
 function Account() {
   const [userInfo, setUserInfo] = useState({});
@@ -8,7 +9,7 @@ function Account() {
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:5000/users/${user_id}`)
+      .get(`${api}/users/${user_id}`)
       .then((response) => {
         setUserInfo(response.data.user);
       })
@@ -20,7 +21,7 @@ function Account() {
 
   const handleAddFunds = () => {
     axios
-      .post(`http://127.0.0.1:5000/add-funds/${user_id}`, { funds })
+      .post(`${api}/add-funds/${user_id}`, { funds })
       .then((response) => {
         console.log(response.data);
         setFunds("");
@@ -38,7 +39,7 @@ function Account() {
   
   const handleWithdrawFunds = () => {
     axios
-      .post(`http://127.0.0.1:5000/withdraw-funds/${user_id}`, { funds })
+      .post(`${api}/withdraw-funds/${user_id}`, { funds })
       .then((response) => {
         console.log(response.data);
         setFunds("");

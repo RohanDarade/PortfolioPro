@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import api from '../config/api';
 
 const IndexChart = () => {
   const [data, setData] = useState([]);
@@ -13,7 +14,7 @@ const IndexChart = () => {
   }, [fromDate, toDate, index]);
 
   const fetchData = () => {
-    let url = `http://127.0.0.1:5000/historical-data?symbol=${index}&from_date=${fromDate}&to_date=${toDate}`;
+    let url = `${api}/historical-data?symbol=${index}&from_date=${fromDate}&to_date=${toDate}`;
 
     axios
       .get(url)

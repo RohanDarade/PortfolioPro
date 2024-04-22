@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import api from "../config/api";
+
 
 function TradeModal({ symbol, price, action, onClose }) {
   const [quantity, setQuantity] = useState(0);
@@ -16,7 +18,7 @@ function TradeModal({ symbol, price, action, onClose }) {
     const user_id = localStorage.getItem('user_id');
     const endpoint = action.toLowerCase(); // Convert action to lowercase
   
-    axios.post(`http://127.0.0.1:5000/${endpoint}/${localStorage.getItem('user_id')}`, data)
+    axios.post(`${api}/${endpoint}/${localStorage.getItem('user_id')}`, data)
       .then(response => {
         console.log(response.data);
         // Display response message
@@ -35,7 +37,7 @@ function TradeModal({ symbol, price, action, onClose }) {
             quantity: quantity,
             trade_type: action
           };
-          axios.post(`http://127.0.0.1:5000/orders/${user_id}`, orderData)
+          axios.post(`${api}/orders/${user_id}`, orderData)
             .then(response => {
               console.log(response.data);
             })

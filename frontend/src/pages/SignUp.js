@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../config/api';
 
 function Signup() {
   const [userData, setUserData] = useState({
@@ -19,7 +20,7 @@ function Signup() {
       broker: 'Zerodha' // Fixed value
     };
   
-    axios.post('http://127.0.0.1:5000/signup', JSON.stringify(newUser), {
+    axios.post(`${api}/signup`, JSON.stringify(newUser), {
       headers: {
         'Content-Type': 'application/json'
       }

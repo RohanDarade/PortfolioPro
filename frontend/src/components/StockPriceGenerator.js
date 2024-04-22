@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import api from '../config/api';
 
 function StockPriceGenerator() {
   const [stockPrices, setStockPrices] = useState([]);
@@ -14,7 +15,7 @@ function StockPriceGenerator() {
 
   useEffect(() => {
     async function fetchStockPrices() {
-      const response = await axios.get('http://127.0.0.1:5000/stocks');
+      const response = await axios.get(`${api}/stocks`);
       console.log(response.data.symbols);
       setStockPrices(response.data.symbols);
     }
@@ -23,7 +24,7 @@ function StockPriceGenerator() {
   }, []);
 
   async function updatePrices() {
-    const response = await axios.get('http://127.0.0.1:5000/stocks');
+    const response = await axios.get(`${api}/stocks`);
     const fetchedPrices = response.data.symbols;
   
     const updatedPrices = fetchedPrices.map(stock => ({
@@ -36,7 +37,7 @@ function StockPriceGenerator() {
       price: price.price
     }));
   
-    await axios.post('http://127.0.0.1:5000/update-price', formattedPrices);
+    await axios.post(`${api}/update-price`, formattedPrices);
     console.log('Prices updated');
   }
   

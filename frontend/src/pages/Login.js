@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../config/api';
         
 function Login() {
   const [userData, setUserData] = useState({
@@ -12,7 +13,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://127.0.0.1:5000/login', userData)
+    axios.post(`${api}/login`, userData)
       .then(response => {
         const { user_id, access_token } = response.data;
         localStorage.setItem('user_id', user_id);

@@ -4,6 +4,7 @@ import Card from "./Card";
 import axios from "axios";
 import AllocationChart from "./AllocationChart";
 import HistoricalDataChart from "./IndexChart";
+import api from "../config/api";
 
 function Portfolio() {
   const [holdings, setHoldings] = useState([]);
@@ -13,7 +14,7 @@ function Portfolio() {
   const fetchHoldings = async () => {
     const user_id = localStorage.getItem("user_id");
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/holdings/${user_id}`);
+      const response = await axios.get(`${api}/holdings/${user_id}`);
       setHoldings(response.data.holdings);
       console.log(response.data.holdings);
       setLoading(false);
@@ -24,7 +25,7 @@ function Portfolio() {
 
   const fetchStocks = async () => {
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/stocks`);
+      const response = await axios.get(`${api}/stocks`);
       setStocks(response.data.symbols);
       console.log(response.data.symbols);
     } catch (error) {

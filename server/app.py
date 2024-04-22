@@ -13,7 +13,7 @@ import time
 from threading import Thread
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
+CORS(app, origins=["*"])
 
 
 # fetch the JWT_SECRET_KEY from the environment variables

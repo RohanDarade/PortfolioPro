@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import TradeModal from "./TradeModal";
+import api from "../config/api";
 
 function Watchlist() {
   const [stocks, setStocks] = useState([]);
@@ -8,7 +9,7 @@ function Watchlist() {
   const [selectedSymbol, setSelectedSymbol] = useState(null);
 
   useEffect(() => {
-    const socket = io("http://127.0.0.1:5000");
+    const socket = io(`${api}/`);
 
     socket.on("connect", () => {
       console.log("connected");

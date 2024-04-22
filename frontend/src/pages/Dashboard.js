@@ -6,6 +6,7 @@ import Orders from '../components/Orders';
 import Portfolio from '../components/Portfolio';
 import Watchlist from '../components/Watchlist';
 import IndexChart from '../components/IndexChart';
+import api from '../config/api';
 
 function Dashboard() {
   const [userData, setUserData] = useState(null);
@@ -19,7 +20,7 @@ function Dashboard() {
       return;
     }
 
-    axios.get('http://127.0.0.1:5000/protected', {
+    axios.get(`${api}/protected`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
