@@ -8,7 +8,7 @@
     PortfolioPro is a web application that allows users to buy, sell, and visualize stocks easily. With PortfolioPro, users can take control of their investments and manage their portfolios effectively.
     <br />
     <h3>
-    <a href="https://drive.google.com/file/d/1dkb2TIMPGNNr5oQgqdNpNUr0sx2u7BkV/view?usp=sharing" target='_blank'>View Video Demo 📽️</a>
+    <a href="https://drive.google.com/file/d/1hN2KPcKRBUDZ8bRGuseRuRbsL64vJe0u/view?usp=sharing" target='_blank'>View Video Demo 📽️</a>
     </h3>
   </p>
 
